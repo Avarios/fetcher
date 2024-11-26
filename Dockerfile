@@ -9,18 +9,11 @@ RUN apt-get update && apt-get install -y \
     ca-certificates
 
 COPY . .
-RUN cargo build --release
+RUN RUSTFLAGS="-C target-feature=+crt-static" cargo build --release --target x86_64-unknown-linux-musl
 
 FROM debian:bullseye-slim
 
-# Install latest SSL libraries
-RUN apt-get update && apt-get install -y \
-    openssl \
-    libssl-dev \
-    ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
-
 WORKDIR /app
-COPY --from=builder /app/target/release/fetcherRS /app/fetcherRS
+COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/fetcherRS /app/fetcherRS
 
 ENTRYPOINT ["/app/fetcherRS"]
