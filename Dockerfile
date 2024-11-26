@@ -1,19 +1,11 @@
-FROM rust:latest AS builder
+FROM rust:slim AS builder
 WORKDIR /app
-
-# Install SSL dependencies
-RUN apt-get update && apt-get install -y \
-    libssl-dev \
-    pkg-config \
-    openssl \
-    ca-certificates
-
 COPY . .
-RUN RUSTFLAGS="-C target-feature=+crt-static" cargo build --release --target x86_64-unknown-linux-musl
+RUN apt-get update && apt-get install -y libssl-dev pkg-config
+RUN cargo build --release
 
 FROM debian:bullseye-slim
-
+RUN apt-get update && apt-get install -y libssl-dev ca-certificates && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
-COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/fetcherRS /app/fetcherRS
-
+COPY --from=builder /app/target/release/fetcherRS /app/fetcherRS
 ENTRYPOINT ["/app/fetcherRS"]
