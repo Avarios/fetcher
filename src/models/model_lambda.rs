@@ -149,141 +149,238 @@ impl Display for LambdaData {
 #[derive(Debug, Clone, Copy, PartialEq, EnumIter, Serialize, Deserialize)]
 #[repr(u8)]
 pub enum AmbientStateEnum {
-    OFF = 0,
-    AUTOMATIC = 1,
-    MANUAL = 2,
-    ERROR = 3
+    #[serde(rename = "OFF")]
+    Off = 0,
+    #[serde(rename = "AUTOMATIC")]
+    Automatic = 1,
+    #[serde(rename = "MANUAL")]
+    Manual = 2,
+    #[serde(rename = "ERROR")]
+    Error = 3
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize)]
 #[repr(u8)]
 pub enum EManagerStateEnum {
+    #[serde(rename = "OFF")]
     Off = 0,
-    Automatik = 1,
+    #[serde(rename = "AUTOMATIC")]
+    Automatic = 1,
+    #[serde(rename = "MANUAL")]
     Manual = 2,
+    #[serde(rename = "ERROR")]
     Error = 3,
+    #[serde(rename = "OFFLINE")]
     Offline = 4,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize)]
 #[repr(u8)]
 pub enum EManagerErrorStateEnum {
+    #[serde(rename = "NONE")]
     None = 0,
+    #[serde(rename = "MESSAGE")]
     Message = 1,
+    #[serde(rename = "WARNING")]
     Warning = 2,
+    #[serde(rename = "ALARM")]
     Alarm = 3,
+    #[serde(rename = "FAULT")]
     Fault = 4,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize)]
 #[repr(u8)]
 pub enum HeatPumpStateEnum {
+    #[serde(rename = "INIT")]
     Init = 0,
+    #[serde(rename = "REFERENCE")]
     Reference = 1,
+    #[serde(rename = "RESTART_BLOCK")]
     RestartBlock = 2,
+    #[serde(rename = "READY")]
     Ready = 3,
+    #[serde(rename = "START_PUMPS")]
     StartPumps = 4,
+    #[serde(rename = "START_COMPRESSOR")]
     StartCompressor = 5,
+    #[serde(rename = "PRE_REGULATION")]
     PreRegulation = 6,
+    #[serde(rename = "REGULATION")]
     Regulation = 7,
+    #[serde(rename = "NOT_USED")]
     NotUsed = 8,
+    #[serde(rename = "COOLING")]
     Cooling = 9,
+    #[serde(rename = "DEFROSTING")]
     Defrosting = 10,
+    #[serde(rename = "STOPPING")]
     Stopping = 20,
+    #[serde(rename = "FAULT_LOCK")]
     FaultLock = 30,
+    #[serde(rename = "ALARM_BLOCK")]
     AlarmBlock = 31,
+    #[serde(rename = "ERROR_RESET")]
     ErrorReset = 40,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize)]
 #[repr(u8)]
 pub enum HeatPumpOperatingStateEnum {
+    #[serde(rename = "STANDBY")]
     Stby = 0,
+    #[serde(rename = "CH")]
     Ch = 1,
+    #[serde(rename = "DHW")]
     Dhw = 2,
+    #[serde(rename = "CC")]
     Cc = 3,
+    #[serde(rename = "CIRCULATE")]
     Circulate = 4,
+    #[serde(rename = "DEFROST")]
     Defrost = 5,
+    #[serde(rename = "OFF")]
     Off = 6,
+    #[serde(rename = "FROST")]
     Frost = 7,
+    #[serde(rename = "STBY_FROST")]
     StbyFrost = 8,
+    #[serde(rename = "NOT_USED")]
     NotUsed = 9,
+    #[serde(rename = "SUMMER")]
     Summer = 10,
+    #[serde(rename = "HOLIDAY")]
     Holiday = 11,
+    #[serde(rename = "ERROR")]
     Error = 12,
+    #[serde(rename = "WARNING")]
     Warning = 13,
+    #[serde(rename = "INFO_MESSAGE")]
     InfoMessage = 14,
+    #[serde(rename = "TIME_BLOCK")]
     TimeBlock = 15,
+    #[serde(rename = "RELEASE_BLOCK")]
     ReleaseBlock = 16,
+    #[serde(rename = "MIN_TEMP_BLOCK")]
     MintempBlock = 17,
+    #[serde(rename = "FIRMWARE_DOWNLOAD")]
     FirmwareDownload = 18,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize)]
 #[repr(u8)]
 pub enum HeatPumpRequestType {
+    #[serde(rename = "NO_REQUEST")]
     NoRequest = 0,
+    #[serde(rename = "FLOW_PUMP_CIRCULATION")]
     FlowPumpCirculation = 1,
+    #[serde(rename = "CENTRAL_HEATING")]
     CentralHeating = 2,
+    #[serde(rename = "CENTRAL_COOLING")]
     CentralCooling = 3,
+    #[serde(rename = "DOMESTIC_HOT_WATER")]
     DomesticHotWater = 4,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize)]
 #[repr(u8)]
 pub enum BoilerStateEnum {
+    #[serde(rename = "STBY")]
     Stby = 0,
+    #[serde(rename = "DHW")]
     Dhw = 1,
+    #[serde(rename = "LEGIO")]
     Legio = 2,
+    #[serde(rename = "SUMMER")]
     Summer = 3,
+    #[serde(rename = "FROST")]
     Frost = 4,
+    #[serde(rename = "HOLIDAY")]
     Holiday = 5,
+    #[serde(rename = "PRIO_STOP")]
     PrioStop = 6,
+    #[serde(rename = "ERROR")]
     Error = 7,
+    #[serde(rename = "OFF")]
     Off = 8,
+    #[serde(rename = "PROMPT_DHW")]
     PromptDhw = 9,
+    #[serde(rename = "TRAILING_STOP")]
     TrailingStop = 10,
+    #[serde(rename = "TEMP_LOCK")]
     TempLock = 11,
+    #[serde(rename = "STBY_FROST")]
     StbyFrost = 12,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize)]
 #[repr(u8)]
 pub enum BufferState {
+    #[serde(rename = "STBY")]
     Stby = 0,
+    #[serde(rename = "HEATING")]
     Heating = 1,
+    #[serde(rename = "COOLING")]
     Cooling = 2,
+    #[serde(rename = "SUMMER")]
     Summer = 3,
+    #[serde(rename = "FROST")]
     Frost = 4,
+    #[serde(rename = "HOLIDAY")]
     Holiday = 5,
+    #[serde(rename = "PRIO_STOP")]
     PrioStop = 6,
+    #[serde(rename = "ERROR")]
     Error = 7,
+    #[serde(rename = "OFF")]
     Off = 8,
+    #[serde(rename = "STBY_FROST")]
     StbyFrost = 9,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize)]
 #[repr(u8)]
 pub enum HeatingCircuitState {
+    #[serde(rename = "HEATING")]
     Heating = 0,
+    #[serde(rename = "ECO")]
     Eco = 1,
+    #[serde(rename = "COOLING")]
     Cooling = 2,
+    #[serde(rename = "FLOOR_DRY")]
     Floordry = 3,
+    #[serde(rename = "FROST")]
     Frost = 4,
+    #[serde(rename = "MAX_TEMP")]
     MaxTemp = 5,
+    #[serde(rename = "ERROR")]
     Error = 6,
+    #[serde(rename = "SERVICE")]
     Service = 7,
+    #[serde(rename = "HOLIDAY")]
     Holiday = 8,
+    #[serde(rename = "CH_SUMMER")]
     ChSummer = 9,
+    #[serde(rename = "CC_WINTER")]
     CcWinter = 10,
+    #[serde(rename = "PRIO_STOP")]
     PrioStop = 11,
+    #[serde(rename = "OFF")]
     Off = 12,
+    #[serde(rename = "RELEASE_OFF")]
     ReleaseOff = 13,
+    #[serde(rename = "TIME_OFF")]
     TimeOff = 14,
+    #[serde(rename = "STBY")]
     Stby = 15,
+    #[serde(rename = "STBY_HEATING")]
     StbyHeating = 16,
+    #[serde(rename = "STBY_ECO")]
     StbyEco = 17,
+    #[serde(rename = "STBY_COOLING")]
     StbyCooling = 18,
+    #[serde(rename = "STBY_FROST")]
     StbyFrost = 19,
+    #[serde(rename = "STBY_FLOOR_DRY")]
     StbyFloordry = 20,
 }
