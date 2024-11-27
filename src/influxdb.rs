@@ -48,7 +48,7 @@ impl InfluxClient {
         }
 
         let point = data_builder.build()?;
-        println!("Writing value lambda data {:#?} " , point);
+        // println!("Writing value lambda data {:#?} " , point);
         self.client.write(bucket.as_str(), stream::iter(vec![point])).await?;
         Ok(())
     }
@@ -65,7 +65,7 @@ impl InfluxClient {
             point = point.field("value",data.value);
             return point.build().unwrap();
         }).collect::<Vec<DataPoint>>();
-        println!("Writing values temperature data {:#?} " , points);
+        // println!("Writing values temperature data {:#?} " , points);
         self.client.write(bucket.as_str(), stream::iter(points)).await?;
         Ok(())
     }

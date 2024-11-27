@@ -1,6 +1,7 @@
 use crate::models::{ model_lambda::LambdaData , model_iobroker::IoBrokerResponse,model_temperature::TemperatureData };
 
 use std::fmt;
+use std::io::Error;
 use serde_json::Value;
 use strum::IntoEnumIterator;
 
@@ -82,23 +83,21 @@ pub fn map_lamda_data(broker_value: &IoBrokerResponse) -> Result<LambdaData, Con
     Ok(model)
 }
 
-pub fn map_to_temperature(response: IoBrokerResponse) -> Result<Vec<TemperatureData>,ConversionError> {
+pub fn map_to_temperature(response: IoBrokerResponse) -> Result<Vec<TemperatureData>, Error> {
     let mut temperature_data = Vec::new();
 
     for (device, value) in response {
-        
-        let json_result:Value = serde_json::from_str(value.val.as_str()).unwrap();
-        
-        let temperature = json_result["temperature"].to_string().parse::<f64>().map_err(|_| {
-            ConversionError::InvalidData(device.clone())
-        })?;
-        
-        let formatted_device = device.split("_").collect::<Vec<&str>>()[1].to_string();
-        
-        temperature_data.push(TemperatureData {
-            device: formatted_device,
-            value: temperature,
-        });
+        let json_result: Value = serde_json::from_str(value.val.as_str())?;
+
+        if !json_result["temperature"].is_null() {
+            let temperature = json_result["temperature"].to_string().parse::<f64>().unwrap();
+            let formatted_device = device.split("_").collect::<Vec<&str>>()[1].to_string();
+
+            temperature_data.push(TemperatureData {
+                device: formatted_device,
+                value: temperature,
+            });
+        }
     }
 
     Ok(temperature_data)
