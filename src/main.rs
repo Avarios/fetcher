@@ -85,12 +85,12 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     loop {
         tokio::select! {
-           /* _ = short_interval.tick() => {
+            _ = short_interval.tick() => {
                 println!("30-Seconds interval triggered");
                 if let Err(e) = handle_short_interval(&io_broker_client, &influx_client, bucket_name.clone()).await {
                     eprintln!("Error l: {}", e);
                 }
-            } */
+            }
             _ = long_interval.tick() => {
                 println!("30-Minutes interval triggered");
                 if let Err(e) = handle_long_interval(&io_broker_client, &influx_client, bucket_name.clone()).await {
