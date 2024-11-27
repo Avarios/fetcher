@@ -84,21 +84,32 @@ pub fn map_lamda_data(broker_value: &IoBrokerResponse) -> Result<LambdaData, Con
 }
 
 pub fn map_to_temperature(response: IoBrokerResponse) -> Result<Vec<TemperatureData>, Error> {
-    let mut temperature_data = Vec::new();
+    let temperature_data: Vec<TemperatureData> = response
+        .into_iter()
+        .filter(|(_, value)| !value.val.is_empty())
+        .filter_map(|(device, value)| {
+            let json_result: Value = match serde_json::from_str(&value.val) {
+                Ok(result) => result,
+                Err(_) => return None,
+            };
 
-    for (device, value) in response {
-        let json_result: Value = serde_json::from_str(value.val.as_str())?;
+            if !json_result["temperature"].is_null() {
+                let temperature = match json_result["temperature"].to_string().parse::<f64>() {
+                    Ok(temp) => temp,
+                    Err(_) => return None,
+                };
 
-        if !json_result["temperature"].is_null() {
-            let temperature = json_result["temperature"].to_string().parse::<f64>().unwrap();
-            let formatted_device = device.split("_").collect::<Vec<&str>>()[1].to_string();
+                let formatted_device = device.split("_").collect::<Vec<&str>>()[1].to_string();
 
-            temperature_data.push(TemperatureData {
-                device: formatted_device,
-                value: temperature,
-            });
-        }
-    }
+                Some(TemperatureData {
+                    device: formatted_device,
+                    value: temperature,
+                })
+            } else {
+                None
+            }
+        })
+        .collect();
 
     Ok(temperature_data)
 }
