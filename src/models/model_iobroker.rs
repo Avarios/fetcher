@@ -1,6 +1,7 @@
 use serde::{Deserialize, Deserializer, Serialize};
 use std::collections::HashMap;
 use std::fmt;
+use serde::de::Error;
 
 pub type IoBrokerResponse = HashMap<String, IoBrokerValue>;
 
@@ -25,7 +26,7 @@ pub struct IoBrokerValue {
     pub lc: i64,
 }
 
-// Custom deserializer function that handles both string and number
+// Custom deserializer function that handles string, number or null
 fn deserialize_string_or_number<'de, D>(deserializer: D) -> Result<String, D::Error>
 where
     D: Deserializer<'de>,
@@ -36,7 +37,7 @@ where
         type Value = String;
 
         fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-            formatter.write_str("string or number")
+            formatter.write_str("string, number, or null")
         }
 
         fn visit_i64<E>(self, value: i64) -> Result<String, E>
@@ -72,6 +73,20 @@ where
             E: serde::de::Error,
         {
             Ok(value)
+        }
+
+        fn visit_none<E>(self) -> Result<Self::Value, E>
+        where
+            E: Error,
+        {
+            Ok("".to_string())
+        }
+
+        fn visit_unit<E>(self) -> Result<Self::Value, E>
+        where
+            E: Error,
+        {
+            Ok("".to_string())
         }
     }
 
