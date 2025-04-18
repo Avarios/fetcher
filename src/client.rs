@@ -52,7 +52,7 @@ impl IoBrokerClient {
     pub async fn fetch_data(&self, path: String) -> Result<IoBrokerResponse, ClientError> {
         let mut attempts = 0;
         let mut last_error = None;
-
+        println!("Fetching data from: {}", path);
         
         while attempts < self.max_retries {
             match self.try_fetch_data(path.clone()).await {
