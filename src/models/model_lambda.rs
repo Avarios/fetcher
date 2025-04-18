@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
+use strum_macros::{Display, EnumIter};
 use std::fmt::{Display, Error, Formatter};
-use strum::EnumIter;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LambdaData {
@@ -146,7 +146,7 @@ impl Display for LambdaData {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, EnumIter, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, EnumIter, Serialize, Deserialize, Display)]
 #[repr(u8)]
 pub enum AmbientStateEnum {
     #[serde(rename = "OFF")]
@@ -159,7 +159,7 @@ pub enum AmbientStateEnum {
     Error = 3
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize, Display)]
 #[repr(u8)]
 pub enum EManagerStateEnum {
     #[serde(rename = "OFF")]
@@ -174,7 +174,7 @@ pub enum EManagerStateEnum {
     Offline = 4,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize, Display)]
 #[repr(u8)]
 pub enum EManagerErrorStateEnum {
     #[serde(rename = "NONE")]
@@ -189,7 +189,7 @@ pub enum EManagerErrorStateEnum {
     Fault = 4,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize, Display)]
 #[repr(u8)]
 pub enum HeatPumpStateEnum {
     #[serde(rename = "INIT")]
@@ -224,7 +224,7 @@ pub enum HeatPumpStateEnum {
     ErrorReset = 40,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize, Display)]
 #[repr(u8)]
 pub enum HeatPumpOperatingStateEnum {
     #[serde(rename = "STANDBY")]
@@ -267,7 +267,7 @@ pub enum HeatPumpOperatingStateEnum {
     FirmwareDownload = 18,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize, Display)]
 #[repr(u8)]
 pub enum HeatPumpRequestType {
     #[serde(rename = "NO_REQUEST")]
@@ -282,7 +282,7 @@ pub enum HeatPumpRequestType {
     DomesticHotWater = 4,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize, Display)]
 #[repr(u8)]
 pub enum BoilerStateEnum {
     #[serde(rename = "STBY")]
@@ -313,7 +313,7 @@ pub enum BoilerStateEnum {
     StbyFrost = 12,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize, Display)]
 #[repr(u8)]
 pub enum BufferState {
     #[serde(rename = "STBY")]
@@ -338,7 +338,7 @@ pub enum BufferState {
     StbyFrost = 9,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, EnumIter,Serialize, Deserialize, Display)]
 #[repr(u8)]
 pub enum HeatingCircuitState {
     #[serde(rename = "HEATING")]

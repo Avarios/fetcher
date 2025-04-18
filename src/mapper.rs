@@ -2,8 +2,11 @@ use crate::models::{ model_lambda::LambdaData , model_iobroker::IoBrokerResponse
 
 use std::fmt;
 use std::io::Error;
+use chrono::{DateTime, Utc};
 use serde_json::Value;
 use strum::IntoEnumIterator;
+use crate::entity::{heatpump, heatpump::ActiveModel};
+use sea_orm::{ActiveValue::NotSet, Set};
 
 impl std::error::Error for ConversionError {}
 
@@ -113,4 +116,55 @@ pub fn map_to_temperature(response: IoBrokerResponse) -> Result<Vec<TemperatureD
 
     Ok(temperature_data)
 }
+
+pub trait ToActiveModel {
+    fn to_active_model(self) -> ActiveModel;
+}
+
+
+impl ToActiveModel for LambdaData {
+    fn to_active_model(self) -> ActiveModel {
+        ActiveModel {
+            event_timestamp: Set(Utc::now().with_timezone(&chrono::FixedOffset::east_opt(0).unwrap())),
+            ambient_state: Set(self.ambient_state.to_string()),
+            ambient_temperaturecalculated: Set(self.ambient_temperature_calculated),
+            boiler_hightemp: Set(self.boiler_high_temp),
+            boiler_lowtemp: Set(self.boiler_low_temp),
+            boiler_maxtemp: Set(self.boiler_max_temp),
+            boiler_state: Set(self.boiler_state.to_string()),
+            buffer_hightemp: Set(self.buffer_high_temp),
+            buffer_lowtemp: Set(self.buffer_low_temp),
+            buffer_maxtemp: Set(self.buffer_max_temp),
+            buffer_state: Set(self.buffer_state.to_string()),
+            emanager_actualpower: Set(self.emanager_actual_power),
+            emanager_operatingstate: Set(self.emanager_operating_state.to_string()),
+            emanager_pvpower: Set(self.emanager_pv_power),
+            emanager_powersetpoint: Set(self.emanager_power_setpoint),
+            heatingcircuit_1_flowtemp: Set(self.heating_circuit_1_flow_temp),
+            heatingcircuit_1_state: Set(self.heating_circuit_1_state.to_string()),
+            heatingcircuit_2_flowtemp: Set(self.heating_circuit_2_flow_temp),
+            heatingcircuit_2_state: Set(self.heating_circuit_2_state.to_string()),
+            heatpump_actualheatingcapacity: Set(self.heatpump_actual_heating_capacity),
+            heatpump_compressorrating: Set(self.heatpump_compressor_rating),
+            heatpump_currentcop: Set(self.heatpump_current_cop),
+            heatpump_electricenergy: Set(self.heatpump_electric_energy),
+            heatpump_energysourceinlettemp: Set(self.heatpump_energy_source_inlet_temp),
+            heatpump_errornumber: Set(self.heatpump_error_number as f64),
+            heatpump_errorstate: Set(self.heatpump_error_state.to_string()),
+            heatpump_flowlinetemp: Set(self.heatpump_flowline_temp),
+            heatpump_heatenergy: Set(self.heatpump_heat_energy),
+            heatpump_inverteractualpower: Set(self.heatpump_inverter_actual_power),
+            heatpump_operatingstate: Set(self.heatpump_operating_state.to_string()),
+            heatpump_requestflowtemp: Set(self.heatpump_request_flow_temp),
+            heatpump_requestreturntemp: Set(self.heatpump_request_return_temp),
+            heatpump_requesttempdiff: Set(self.heatpump_request_temp_diff),
+            heatpump_requesttype: Set(self.heatpump_request_type.to_string()),
+            heatpump_returnlinetemp: Set(self.heatpump_return_line_temp),
+            heatpump_state: Set(self.heatpump_state.to_string()),
+            heatpump_volumesink: Set(self.heatpump_volume_sink),
+            heatpump_volumesourceflow: Set(self.heatpump_volume_source_flow),
+        }
+    }
+}
+
 
