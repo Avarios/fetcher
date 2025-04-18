@@ -14,6 +14,25 @@ on:
     tags: [ 'v*.*.*' ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+        type: choice
+        options:
+        - info
+        - warning
+        - debug
+      tags:
+        description: 'Manual'
+        required: false
+        type: boolean
+      environment:
+        description: 'Manually run the workflow'
+        type: environment
+        required: true
 
 env:
   # Use docker.io for Docker Hub if empty
