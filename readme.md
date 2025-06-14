@@ -8,8 +8,7 @@ POSTGRES_HOST: the token needed to authenticate against influx \
 POSTGRES_PORT: bucketname where the data flows in \
 POSTGRES_USER: The username for the postgres database \
 POSTGRES_PASSWORD: Password for the postgres user \
-POSTGRES_DATABASE: Database name \
-POSTGRES_TABLENAME: Tabename where the data is stored in  \
+POSTGRES_DATABASE: Database name 
 
 ## To run in docker:
 
@@ -19,6 +18,7 @@ POSTGRES_TABLENAME: Tabename where the data is stored in  \
 -e POSTGRES_USER=value
 -e POSTGRES_PASSWORD=value
 -e POSTGRES_DATABASE=value
--e POSTGRES_TABLENAME=value` 
+
+You dont need to define tablenames anymore as seaorm has already a mapping in the code
 
 
