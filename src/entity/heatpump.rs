@@ -25,13 +25,6 @@ pub struct Model {
     pub buffer_maxtemp: f64,
     pub buffer_state: String,
     #[sea_orm(column_type = "Double")]
-    pub emanager_actualpower: f64,
-    pub emanager_operatingstate: String,
-    #[sea_orm(column_type = "Double")]
-    pub emanager_pvpower: f64,
-    #[sea_orm(column_type = "Double")]
-    pub emanager_powersetpoint: f64,
-    #[sea_orm(column_type = "Double")]
     pub heatingcircuit_1_flowtemp: f64,
     pub heatingcircuit_1_state: String,
     #[sea_orm(column_type = "Double")]

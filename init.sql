@@ -1,3 +1,4 @@
+
 CREATE TABLE heatpump (
     event_timestamp TIMESTAMP WITH TIME ZONE PRIMARY KEY NOT NULL,
     Ambient_State varchar(50) NOT NULL,
@@ -10,10 +11,6 @@ CREATE TABLE heatpump (
     Buffer_LowTemp double precision NOT NULL,
     Buffer_MaxTemp double precision NOT NULL,
     Buffer_State varchar(50) NOT NULL,
-    EManager_ActualPower double precision NOT NULL,
-    EManager_OperatingState varchar(50) NOT NULL,
-    EManager_PVPower double precision NOT NULL,
-    EManager_PowerSetpoint double precision NOT NULL,
     HeatingCircuit_1_FlowTemp double precision NOT NULL,
     HeatingCircuit_1_State varchar(50) NOT NULL,
     HeatingCircuit_2_FlowTemp double precision NOT NULL,
@@ -39,8 +36,22 @@ CREATE TABLE heatpump (
     Heatpump_VolumeSourceFlow double precision NOT NULL
 );
 
+-- Create the temperature_data table
+CREATE TABLE temperature_data (
+   event_timestamp TIMESTAMP WITH TIME ZONE PRIMARY KEY NOT NULL,
+   data JSONB NOT NULL
+);
+
+-- Create index on temperature_data table
+CREATE INDEX IF NOT EXISTS idx_temperature_data_eventtime
+   ON temperature_data USING btree
+   (event_timestamp ASC NULLS LAST)
+   INCLUDE(event_timestamp)
+   TABLESPACE pg_default;
+
+-- Create index on heatpump table
 CREATE INDEX IF NOT EXISTS idx_eventtime
-    ON public.heatpump USING btree
+    ON heatpump USING btree
     (event_timestamp ASC NULLS LAST)
     INCLUDE(event_timestamp)
     WITH (deduplicate_items=True)
@@ -53,9 +64,10 @@ BEGIN
       SELECT FROM pg_catalog.pg_roles
       WHERE rolname = 'fetcher'
    ) THEN
-      CREATE ROLE fetcher LOGIN PASSWORD 'ADDPASSWORDHERE';
+      CREATE ROLE fetcher LOGIN PASSWORD 'qwasyx';
    END IF;
 END
 $$;
 
-GRANT INSERT ON heatpump TO fetcher;
+GRANT DELETE,SELECT,INSERT ON heatpump TO fetcher;
+GRANT DELETE,SELECT,INSERT ON temperature_data TO fetcher;
