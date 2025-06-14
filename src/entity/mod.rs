@@ -3,3 +3,4 @@
 pub mod prelude;
 
 pub mod heatpump;
+pub mod temperature_data;

@@ -57,12 +57,14 @@ impl IoBrokerClient {
         while attempts < self.max_retries {
             match self.try_fetch_data(path.clone()).await {
                 Ok(data) => return Ok(data),
+                Err(e) if attempts < self.max_retries => {
+                    sleep(Duration::from_secs(2u64.pow(attempts))).await;
+                    last_error = Some(e);
+                    attempts += 1;
+                }
                 Err(e) => {
                     last_error = Some(e);
                     attempts += 1;
-                    if attempts < self.max_retries {
-                        sleep(Duration::from_secs(2u64.pow(attempts))).await;
-                    }
                 }
             }
         }
