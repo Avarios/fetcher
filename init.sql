@@ -1,4 +1,4 @@
-
+DROP TABLE IF EXISTS heatpump;
 CREATE TABLE heatpump (
     event_timestamp TIMESTAMP WITH TIME ZONE PRIMARY KEY NOT NULL,
     Ambient_State varchar(50) NOT NULL,
@@ -36,11 +36,68 @@ CREATE TABLE heatpump (
     Heatpump_VolumeSourceFlow double precision NOT NULL
 );
 
+DROP TABLE IF EXISTS temperature_data;
 -- Create the temperature_data table
 CREATE TABLE temperature_data (
    event_timestamp TIMESTAMP WITH TIME ZONE PRIMARY KEY NOT NULL,
    data JSONB NOT NULL
 );
+
+CREATE OR REPLACE VIEW heatpump_current_electric
+ AS
+ SELECT ( SELECT heatpump.heatpump_electricenergy
+           FROM heatpump
+          WHERE heatpump.event_timestamp >= date_trunc('year'::text, CURRENT_TIMESTAMP)
+          ORDER BY heatpump.event_timestamp
+         LIMIT 1) AS start_value,
+    ( SELECT heatpump.heatpump_electricenergy
+           FROM heatpump
+          WHERE heatpump.event_timestamp <= CURRENT_TIMESTAMP
+          ORDER BY heatpump.event_timestamp DESC
+         LIMIT 1) AS end_value,
+    ((( SELECT heatpump.heatpump_electricenergy
+           FROM heatpump
+          WHERE heatpump.event_timestamp <= CURRENT_TIMESTAMP
+          ORDER BY heatpump.event_timestamp DESC
+         LIMIT 1)) - (( SELECT heatpump.heatpump_electricenergy
+           FROM heatpump
+          WHERE heatpump.event_timestamp >= date_trunc('year'::text, CURRENT_TIMESTAMP)
+          ORDER BY heatpump.event_timestamp
+         LIMIT 1))) AS "difference";
+
+CREATE OR REPLACE VIEW heatpump_current_heat
+ AS
+ SELECT ( SELECT heatpump.heatpump_heatenergy
+           FROM heatpump
+          WHERE heatpump.event_timestamp >= date_trunc('year'::text, CURRENT_TIMESTAMP)
+          ORDER BY heatpump.event_timestamp
+         LIMIT 1) AS start_value,
+    ( SELECT heatpump.heatpump_heatenergy
+           FROM heatpump
+          WHERE heatpump.event_timestamp <= CURRENT_TIMESTAMP
+          ORDER BY heatpump.event_timestamp DESC
+         LIMIT 1) AS end_value,
+    (( SELECT heatpump.heatpump_heatenergy
+           FROM heatpump
+          WHERE heatpump.event_timestamp <= CURRENT_TIMESTAMP
+          ORDER BY heatpump.event_timestamp DESC
+         LIMIT 1)) - (( SELECT heatpump.heatpump_heatenergy
+           FROM heatpump
+          WHERE heatpump.event_timestamp >= date_trunc('year'::text, CURRENT_TIMESTAMP)
+          ORDER BY heatpump.event_timestamp
+         LIMIT 1)) AS "heatpump_difference";
+
+CREATE OR REPLACE VIEW heatpump_cop_current AS
+SELECT 
+    e.difference AS electric_difference,
+    h.heatpump_difference AS heat_difference,
+    h.heatpump_difference / e.difference AS cop_ratio,
+    e.start_value AS electric_start,
+    e.end_value AS electric_end,
+    h.start_value AS heat_start,
+    h.end_value AS heat_end
+FROM heatpump_current_electric e
+CROSS JOIN heatpump_current_heat h;
 
 -- Create index on temperature_data table
 CREATE INDEX IF NOT EXISTS idx_temperature_data_eventtime
@@ -69,5 +126,8 @@ BEGIN
 END
 $$;
 
-GRANT DELETE,SELECT,INSERT ON heatpump TO fetcher;
-GRANT DELETE,SELECT,INSERT ON temperature_data TO fetcher;
+GRANT SELECT ON heatpump TO fetcher;
+GRANT SELECT ON heatpump_current_electric TO fetcher;
+GRANT SELECT ON heatpump_current_heat TO fetcher;
+GRANT SELECT ON heatpump_cop_current TO fetcher;
+GRANT SELECT ON temperature_data TO fetcher;
